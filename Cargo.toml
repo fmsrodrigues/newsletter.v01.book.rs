@@ -37,7 +37,7 @@ tracing-actix-web = "0.7"
 [dependencies.sqlx]
 version = "0.6"
 default-features = false
-features = ["runtime-tokio-rustls", "macros", "postgres", "uuid", "chrono", "migrate"]
+features = ["runtime-tokio-rustls", "macros", "postgres", "uuid", "chrono", "migrate", "offline"]
 
 [dev-dependencies]
 reqwest = "0.11"

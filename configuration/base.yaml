@@ -1,8 +1,7 @@
 application:
   port: 8000
-  host: "localhost"
 database:
-  host: "127.0.0.1" #localhost
+  host: "localhost"
   port: 5432
   username: "docker"
   password: "docker"
