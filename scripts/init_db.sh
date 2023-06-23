@@ -40,6 +40,13 @@ until psql -h "${DB_HOST}" -U "${DB_USER}" -p "${DB_PORT}" -d "postgres" -c '\q'
   sleep 1
 done
 
+# A developer suggested to change the above statement for this
+# until pg_isready --dbname "${DATABASE_URL}"; do
+#   >&2 echo "Postgres is still unavailable - sleeping"
+#   sleep 1
+# done
+# Might be good to avoid the need of psql native instalation
+
 >&2 echo "Postgres is up and running on port ${DB_PORT}!"
 
 DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
