@@ -36,7 +36,7 @@ impl EmailClient {
         html_content: &str,
         text_content: &str,
     ) -> Result<(), reqwest::Error> {
-        let sandbox_id = "111111";
+        let sandbox_id = "2287470";
         let url = format!("{}/api/send/{}", self.base_url, &sandbox_id);
         let request_body = SendEmailRequest {
             from: self.sender.as_ref(),
@@ -124,7 +124,7 @@ mod tests {
 
         Mock::given(header_exists("Api-Token"))
             .and(header("Content-Type", "application/json"))
-            .and(path_regex(r"^/api/send/(\d+)$"))
+            .and(path_regex(r"\/api\/send\/?(\d+)?\/?$"))
             .and(method("POST"))
             .and(SendEmailBodyMatcher)
             .respond_with(ResponseTemplate::new(200))
