@@ -1,7 +1,7 @@
 use actix_web::{web, HttpResponse, ResponseError};
 use anyhow::Context;
 use reqwest::StatusCode;
-use sqlx::{PgPool, Row};
+use sqlx::PgPool;
 
 use crate::{domain::SubscriberEmail, email_client::EmailClient, routes::error_chain_fmt};
 
@@ -53,7 +53,7 @@ pub async fn publish_newsletter(
             Ok(subscriber) => {
                 email_client
                     .send_email(
-                        subscriber.email,
+                        &subscriber.email,
                         &body.title,
                         &body.content.html,
                         &body.content.text,
@@ -84,12 +84,7 @@ struct ConfirmedSubscriber {
 async fn get_confirmed_subscriber(
     pool: &PgPool,
 ) -> Result<Vec<Result<ConfirmedSubscriber, anyhow::Error>>, anyhow::Error> {
-    struct Row {
-        email: String,
-    }
-
-    let rows = sqlx::query_as!(
-        Row,
+    let rows = sqlx::query!(
         r#"
         SELECT email
         FROM subscriptions
