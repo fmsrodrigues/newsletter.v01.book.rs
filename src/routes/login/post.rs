@@ -1,7 +1,8 @@
 use actix_web::error::InternalError;
-use actix_web::http::{header::LOCATION, StatusCode};
-use actix_web::{web, HttpResponse, ResponseError};
-use secrecy::Secret;
+use actix_web::http::header::LOCATION;
+use actix_web::{web, HttpResponse};
+use hmac::{Hmac, Mac};
+use secrecy::{ExposeSecret, Secret};
 use sqlx::PgPool;
 
 use crate::startup::HmacSecret;
@@ -45,9 +46,8 @@ pub async fn login(
                 AuthError::UnexpectedError(_) => LoginError::UnexpectedError(e.into()),
             };
 
-            let query_string = format!("error={}", urlencoding::Encoded::new(self.to_string()));
+            let query_string = format!("error={}", urlencoding::Encoded::new(e.to_string()));
 
-            let secret: &[u8] = todo!();
             let hmac_tag = {
                 let mut mac =
                     Hmac::<sha2::Sha256>::new_from_slice(secret.0.expose_secret().as_bytes())
