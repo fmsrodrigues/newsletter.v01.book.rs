@@ -40,7 +40,7 @@ validator = "0.16"
 fake = "~2.3"
 quickcheck = "0.9.2"
 quickcheck_macros = "0.9.1"
-reqwest = {  version = "0.11", default-features = false, features = ["json", "rustls-tls"] }
+reqwest = {  version = "0.11", default-features = false, features = ["json", "rustls-tls", "cookies"] }
 rand = { version = "0.8", features = ["std_rng"] }
 thiserror = "1"
 anyhow = "1"
@@ -48,8 +48,7 @@ base64 = "0.21"
 argon2 = { version = "0.4", features = ["std"] }
 urlencoding = "2"
 htmlescape = "0.3"
-hmac = { version = "0.12", features = ["std"] }
-sha2 = "0.10"
+actix-web-flash-messages = { version = "0.4", features = ["cookies"] }
 
 [dependencies.sqlx]
 version = "0.6"
