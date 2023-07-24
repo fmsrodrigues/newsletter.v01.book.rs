@@ -29,12 +29,13 @@ pub async fn admin_dashboard(
                 <p>Welcome {username}</p>
                 <p>Available actions:</p>
                 <ol>
+                    <li><a href="/admin/newsletters">Send newsletters</a></li>
                     <li><a href="/admin/password">Change password</a></li>
                     <li>
                         <form name="logoutForm" action="/admin/logout" method="post">
                             <input type="submit" value="Logout">
                         </form>
-                        </li>
+                    </li>
                 </ol>
             </body>
             
