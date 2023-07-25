@@ -4,7 +4,8 @@ use anyhow::Context;
 use sqlx::PgPool;
 
 use crate::authentication::UserId;
-use crate::utils::{e500, see_other};
+use crate::idempotency::IdempotencyKey;
+use crate::utils::{e400, e500, see_other};
 use crate::{domain::SubscriberEmail, email_client::EmailClient};
 
 #[derive(serde::Deserialize)]
@@ -12,6 +13,7 @@ pub struct FormData {
     title: String,
     text_content: String,
     html_content: String,
+    idempotency_key: String,
 }
 
 #[tracing::instrument(
@@ -27,6 +29,14 @@ pub async fn publish_newsletter(
     email_client: web::Data<EmailClient>,
     user_id: web::ReqData<UserId>,
 ) -> Result<HttpResponse, actix_web::Error> {
+    let FormData {
+        title,
+        text_content,
+        html_content,
+        idempotency_key,
+    } = form.0;
+    let idempotency_key: IdempotencyKey = idempotency_key.try_into().map_err(e400)?;
+
     let subscribers = get_confirmed_subscriber(&pool).await.map_err(e500)?;
 
     // This could be refactored to send all emails on one request
@@ -37,12 +47,7 @@ pub async fn publish_newsletter(
         match subscriber {
             Ok(subscriber) => {
                 email_client
-                    .send_email(
-                        &subscriber.email,
-                        &form.title,
-                        &form.html_content,
-                        &form.text_content,
-                    )
+                    .send_email(&subscriber.email, &title, &html_content, &text_content)
                     .await
                     .with_context(|| {
                         format!("Failed to send newsletter issue to {}", subscriber.email)
