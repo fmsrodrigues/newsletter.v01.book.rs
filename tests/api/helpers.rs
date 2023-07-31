@@ -65,7 +65,7 @@ impl TestApp {
 
             let raw_link = links[0].as_str().to_owned();
             let mut confirmation_link = reqwest::Url::parse(&raw_link).unwrap();
-            assert_eq!(confirmation_link.host_str().unwrap(), "127.0.0.1");
+            assert_eq!(confirmation_link.host_str().unwrap(), "localhost");
             confirmation_link.set_port(Some(self.port)).unwrap();
             confirmation_link
         };
